@@ -9,6 +9,7 @@ import jade.core.Agent;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class AbstractWorkingAgent extends Agent {
@@ -32,8 +33,14 @@ public abstract class AbstractWorkingAgent extends Agent {
         getAbilities().forEach(ability -> ability.setAgentName(this.getAID().getName()));
     }
 
+    public Optional<Ability> getAbility(UUID uuid) {
+        return getAbilities().stream()
+                .filter(ability -> ability.getAbilityUuid().equals(uuid))
+                .findFirst();
+    }
+
     abstract public List<Ability> getAbilities();
 
-    abstract public Object work(UUID abilityUuid, String input);
+    abstract public Object work(Ability ability, String input);
 
 }

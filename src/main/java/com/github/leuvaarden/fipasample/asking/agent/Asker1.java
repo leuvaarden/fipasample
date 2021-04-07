@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 
-public class AskingAgent extends AbstractAskingAgent {
+public class Asker1 extends AbstractAskingAgent {
     private final Logger log = Logger.getMyLogger(this.getClass().getName());
 
     // TODO HashMaps to Queues
@@ -26,7 +26,7 @@ public class AskingAgent extends AbstractAskingAgent {
     private final ConcurrentMap<UUID, Object> taskInputs = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Object> taskOutputs = new ConcurrentHashMap<>();
 
-    public AskingAgent() {
+    public Asker1() {
         super(Duration.ofMinutes(1), Duration.ofSeconds(15), Duration.ofSeconds(5));
     }
 

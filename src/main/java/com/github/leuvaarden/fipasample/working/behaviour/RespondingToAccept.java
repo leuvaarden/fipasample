@@ -1,5 +1,6 @@
 package com.github.leuvaarden.fipasample.working.behaviour;
 
+import com.github.leuvaarden.fipasample.common.data.Ability;
 import com.github.leuvaarden.fipasample.common.util.SerializationUtils;
 import com.github.leuvaarden.fipasample.working.agent.AbstractWorkingAgent;
 import jade.core.behaviours.TickerBehaviour;
@@ -9,6 +10,7 @@ import jade.util.Logger;
 import lombok.SneakyThrows;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -31,7 +33,13 @@ public class RespondingToAccept extends TickerBehaviour {
         while ((acceptProposal = abstractWorkingAgent.receive(messageTemplate)) != null) {
             log.log(Level.INFO, "Message received: [{0}]", acceptProposal);
             UUID requiredAbility = UUID.fromString(acceptProposal.getInReplyTo());
-            Object output = abstractWorkingAgent.work(requiredAbility, acceptProposal.getContent());
+            Optional<Ability> optionalAbility = abstractWorkingAgent.getAbility(requiredAbility);
+            if (optionalAbility.isEmpty()) {
+                log.log(Level.WARNING, "No ability found for uuid: [{0}]", requiredAbility);
+                continue;
+            }
+            Ability ability = optionalAbility.get();
+            Object output = abstractWorkingAgent.work(ability, acceptProposal.getContent());
             ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
             inform.setSender(abstractWorkingAgent.getAID());
             inform.addReceiver(acceptProposal.getSender());

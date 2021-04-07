@@ -11,7 +11,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -37,15 +36,7 @@ public class Worker2 extends AbstractWorkingAgent {
 
     @SneakyThrows
     @Override
-    public Object work(UUID abilityUuid, String input) {
-        Optional<Ability> optionalAbility = getAbilities().stream()
-                .filter(ability -> ability.getAbilityUuid().equals(abilityUuid))
-                .findFirst();
-        if (optionalAbility.isEmpty()) {
-            log.log(Level.WARNING, "Not found ability for uuid: [{0}]", abilityUuid);
-            return null;
-        }
-        Ability ability = optionalAbility.get();
+    public Object work(Ability ability, String input) {
         if (ability.getInputType().equals("Double") && ability.getOutputType().equals("String")) {
             List<Double> typedInput = SerializationUtils.deserialize(input, new TypeReference<>() {});
             return typedInput.stream().map(this::workDoubleToString).collect(Collectors.toList());
